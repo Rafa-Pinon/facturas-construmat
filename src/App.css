@@ -2,6 +2,7 @@
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f9;
+  font-size: larger;
   margin: 0;
   padding: 0;
   color: #333;
@@ -47,20 +48,29 @@ body {
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  box-sizing: border-box;
 }
 
 /* Item group styles */
 .item-group {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 10px;
 }
 
 .item-group input {
-  flex: 1;
+  flex: 1 1 calc(33.33% - 10px);
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .item-group input {
+    flex: 1 1 100%;
+  }
 }
 
 /* Button styles */
@@ -72,6 +82,7 @@ body {
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
+  text-align: center;
 }
 
 .btn-add {
@@ -91,6 +102,7 @@ body {
   border-radius: 8px;
   background-color: #f9f9f9;
   margin-top: 20px;
+  overflow-x: auto;
 }
 
 .invoice-table {
@@ -104,16 +116,55 @@ body {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
+  font-size: 14px;
 }
 
 .invoice-table th {
   background-color: #4a90e2;
   color: white;
 }
+
 .logo {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
 }
-.logo img{
+
+.logo img {
   width: 20%;
+  max-width: 100px;
+}
+
+@media (max-width: 768px) {
+  .logo {
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .logo img {
+    width: 50%;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-container {
+    padding: 15px;
+    
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .invoice-table th,
+  .invoice-table td {
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  .btn {
+    padding: 8px 15px;
+    font-size: 14px;
+  }
 }

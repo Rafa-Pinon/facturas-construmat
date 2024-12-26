@@ -29,6 +29,13 @@ function App() {
     });
   };
 
+  const calculateTotal = () => {
+    return invoiceData.items.reduce((total, item) => {
+      const itemTotal = parseFloat(item.quantity) * parseFloat(item.price);
+      return total + (isNaN(itemTotal) ? 0 : itemTotal);
+    }, 0);
+  };
+
   const generatePDF = () => {
     const input = document.getElementById("invoice");
     html2canvas(input).then((canvas) => {
@@ -127,10 +134,23 @@ function App() {
                 <td>{item.description}</td>
                 <td>{item.quantity}</td>
                 <td>{item.price}</td>
-                <td>{item.quantity * item.price}</td>
+                <td>{item.quantity * item.price || 0}</td>
               </tr>
             ))}
           </tbody>
+          <tfoot>
+            <tr>
+              <td
+                colSpan="3"
+                style={{ fontWeight: "bold", textAlign: "right" }}
+              >
+                Total General:
+              </td>
+              <td style={{ fontWeight: "bold" }}>
+                {calculateTotal().toFixed(2)}
+              </td>
+            </tr>
+          </tfoot>
         </table>
       </div>
       <button onClick={generatePDF} className="btn btn-generate">
