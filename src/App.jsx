@@ -8,7 +8,7 @@ function App() {
   const [invoiceData, setInvoiceData] = useState({
     customerName: "",
     date: "",
-    items: [{ description: "", quantity: 1, price: 0 }],
+    items: [{ description: "", quantity: "1", price: "0", unit: "" }],
   });
 
   const handleInputChange = (e, index) => {
@@ -25,14 +25,18 @@ function App() {
   const addItem = () => {
     setInvoiceData({
       ...invoiceData,
-      items: [...invoiceData.items, { description: "", quantity: 1, price: 0 }],
+      items: [
+        ...invoiceData.items,
+        { description: "", quantity: "1", price: "0", unit: "" },
+      ],
     });
   };
 
   const calculateTotal = () => {
     return invoiceData.items.reduce((total, item) => {
-      const itemTotal = parseFloat(item.quantity) * parseFloat(item.price);
-      return total + (isNaN(itemTotal) ? 0 : itemTotal);
+      const quantity = parseFloat(item.quantity) || 0;
+      const price = parseFloat(item.price) || 0;
+      return total + quantity * price;
     }, 0);
   };
 
@@ -46,6 +50,36 @@ function App() {
       pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
       pdf.save("invoice.pdf");
     });
+  };
+
+  const handleFocus = (e, index) => {
+    const { name } = e.target;
+    if (name.startsWith("item-")) {
+      const field = name.split("-")[1];
+      const items = [...invoiceData.items];
+      if (field === "quantity" && items[index].quantity === "1") {
+        items[index].quantity = "";
+      }
+      if (field === "price" && items[index].price === "0") {
+        items[index].price = "";
+      }
+      setInvoiceData({ ...invoiceData, items });
+    }
+  };
+
+  const handleBlur = (e, index) => {
+    const { name } = e.target;
+    if (name.startsWith("item-")) {
+      const field = name.split("-")[1];
+      const items = [...invoiceData.items];
+      if (field === "quantity" && items[index].quantity === "") {
+        items[index].quantity = "1";
+      }
+      if (field === "price" && items[index].price === "") {
+        items[index].price = "0";
+      }
+      setInvoiceData({ ...invoiceData, items });
+    }
   };
 
   return (
@@ -90,10 +124,19 @@ function App() {
               onChange={(e) => handleInputChange(e, index)}
             />
             <input
+              type="text"
+              name="item-unit"
+              placeholder="Unidad (ej. kg, m, pcs)"
+              value={item.unit}
+              onChange={(e) => handleInputChange(e, index)}
+            />
+            <input
               type="number"
               name="item-quantity"
               placeholder="Cantidad"
               value={item.quantity}
+              onFocus={(e) => handleFocus(e, index)}
+              onBlur={(e) => handleBlur(e, index)}
               onChange={(e) => handleInputChange(e, index)}
             />
             <input
@@ -101,6 +144,8 @@ function App() {
               name="item-price"
               placeholder="Precio"
               value={item.price}
+              onFocus={(e) => handleFocus(e, index)}
+              onBlur={(e) => handleBlur(e, index)}
               onChange={(e) => handleInputChange(e, index)}
             />
           </div>
@@ -123,6 +168,7 @@ function App() {
           <thead>
             <tr>
               <th>Descripción</th>
+              <th>Unidad</th>
               <th>Cantidad</th>
               <th>Precio</th>
               <th>Total</th>
@@ -132,6 +178,7 @@ function App() {
             {invoiceData.items.map((item, index) => (
               <tr key={index}>
                 <td>{item.description}</td>
+                <td>{item.unit}</td>
                 <td>{item.quantity}</td>
                 <td>{item.price}</td>
                 <td>{item.quantity * item.price || 0}</td>
@@ -141,7 +188,7 @@ function App() {
           <tfoot>
             <tr>
               <td
-                colSpan="3"
+                colSpan="4"
                 style={{ fontWeight: "bold", textAlign: "right" }}
               >
                 Total General:
