@@ -157,13 +157,14 @@ function App() {
 
       <div id="invoice" className="invoice-container">
         <div className="logo">
-          <h2>Factura</h2>
+          <h3>Factura</h3>
           <img src={Logo} alt="" />
         </div>
-
-        <p>Cliente: {invoiceData.customerName}</p>
-        <p>Trabajo: {invoiceData.customerTrabajo}</p>
-        <p>Fecha: {invoiceData.date}</p>
+        <div className="etiquetasp">
+          <p>Cliente: {invoiceData.customerName}</p>
+          <p>Trabajo: {invoiceData.customerTrabajo}</p>
+          <p>Fecha: {invoiceData.date}</p>
+        </div>
         <table className="invoice-table">
           <thead>
             <tr>
@@ -199,6 +200,10 @@ function App() {
             </tr>
           </tfoot>
         </table>
+        <div className="administrador">
+          <h2>Formulo</h2>
+          <h3>Lic. Rafael Pinon Gonzalez</h3>
+        </div>
       </div>
       <button onClick={generatePDF} className="btn btn-generate">
         Generar PDF
